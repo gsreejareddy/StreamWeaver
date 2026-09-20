@@ -3,6 +3,7 @@ import { useState } from "react";
 function FileUpload() {
   const [file, setFile] = useState(null);
   const [message, setMessage] = useState("");
+  const [preview, setPreview] = useState([]);
 
   const handleFileChange = (event) => {
     const selectedFile = event.target.files[0];
@@ -10,6 +11,7 @@ function FileUpload() {
     if (selectedFile) {
       setFile(selectedFile);
       setMessage("");
+      setPreview([]);
     }
   };
 
@@ -23,6 +25,8 @@ function FileUpload() {
     formData.append("file", file);
 
     try {
+      setMessage("Uploading and processing...");
+
       const response = await fetch(
         "http://localhost:5000/api/upload",
         {
@@ -34,6 +38,7 @@ function FileUpload() {
       const data = await response.json();
 
       setMessage(data.message);
+      setPreview(data.preview || []);
     } catch (error) {
       console.error(error);
       setMessage("Upload failed.");
@@ -66,6 +71,36 @@ function FileUpload() {
       )}
 
       {message && <p>{message}</p>}
+
+      {preview.length > 0 && (
+        <div>
+          <h2>Dataset Preview</h2>
+
+          <p>
+            Showing first {preview.length} rows
+          </p>
+
+          <table border="1">
+            <thead>
+              <tr>
+                {Object.keys(preview[0]).map((column) => (
+                  <th key={column}>{column}</th>
+                ))}
+              </tr>
+            </thead>
+
+            <tbody>
+              {preview.map((row, index) => (
+                <tr key={index}>
+                  {Object.values(row).map((value, columnIndex) => (
+                    <td key={columnIndex}>{value}</td>
+                  ))}
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
     </div>
   );
 }
