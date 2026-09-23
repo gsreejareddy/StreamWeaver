@@ -99,8 +99,7 @@ function FileUpload() {
           </p>
 
           <p>
-            Preview Rows:{" "}
-            <strong>{preview.length}</strong>
+            Preview Rows: <strong>{preview.length}</strong>
           </p>
         </div>
       )}
