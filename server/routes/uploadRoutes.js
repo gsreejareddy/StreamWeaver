@@ -8,7 +8,7 @@ router.post("/upload", (req, res) => {
   const busboy = Busboy({ headers: req.headers });
 
   let fileName = "";
-  let fileSize = 0;
+  let rowCount = 0;
   const previewRows = [];
 
   busboy.on("file", (fieldname, file, info) => {
@@ -17,7 +17,7 @@ router.post("/upload", (req, res) => {
     file
       .pipe(csv())
       .on("data", (row) => {
-        fileSize++;
+        rowCount++;
 
         if (previewRows.length < 1000) {
           previewRows.push(row);
@@ -25,7 +25,11 @@ router.post("/upload", (req, res) => {
       })
       .on("end", () => {
         console.log(`Received file: ${fileName}`);
+        console.log(`Total rows: ${rowCount}`);
         console.log(`Preview rows: ${previewRows.length}`);
+      })
+      .on("error", (error) => {
+        console.error("CSV parsing error:", error);
       });
   });
 
@@ -33,13 +37,14 @@ router.post("/upload", (req, res) => {
     res.json({
       message: "CSV processed successfully",
       fileName: fileName,
-      rowCount: previewRows.length,
+      rowCount: rowCount,
+      previewCount: previewRows.length,
       preview: previewRows
     });
   });
 
   busboy.on("error", (error) => {
-    console.error(error);
+    console.error("Upload error:", error);
 
     res.status(500).json({
       message: "CSV processing failed"

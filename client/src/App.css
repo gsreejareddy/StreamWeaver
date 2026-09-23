@@ -154,3 +154,71 @@ button {
 .main-content th {
   background: #f3f4f6;
 }
+/* Dataset Upload */
+
+.upload-section {
+  background: white;
+  padding: 30px;
+  margin-top: 30px;
+  border-radius: 12px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.06);
+}
+
+.upload-section input[type="file"] {
+  margin: 15px 0;
+}
+
+.file-info {
+  background: #f8fafc;
+  padding: 20px;
+  border-radius: 8px;
+  margin-top: 15px;
+}
+
+.file-info button {
+  padding: 11px 20px;
+  border: none;
+  border-radius: 7px;
+  background: #2563eb;
+  color: white;
+}
+
+.file-info button:disabled {
+  background: #9ca3af;
+  cursor: not-allowed;
+}
+
+.upload-message {
+  margin-top: 20px;
+  font-weight: bold;
+}
+
+.dataset-info {
+  margin-top: 25px;
+  padding: 20px;
+  background: #eff6ff;
+  border-radius: 8px;
+}
+
+.preview-section {
+  margin-top: 30px;
+}
+
+.table-container {
+  width: 100%;
+  overflow-x: auto;
+  background: white;
+  border-radius: 8px;
+}
+
+.table-container table {
+  min-width: 700px;
+}
+
+.table-container th {
+  white-space: nowrap;
+}
+
+.table-container td {
+  white-space: nowrap;
+}
