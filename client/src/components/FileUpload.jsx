@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { List } from "react-window";
 
 function FileUpload() {
   const [file, setFile] = useState(null);
@@ -52,11 +53,40 @@ function FileUpload() {
     }
   };
 
+  const columns =
+    preview.length > 0 ? Object.keys(preview[0]) : [];
+
+  const Row = ({ index, style }) => {
+    const row = preview[index];
+
+    return (
+      <div
+        style={{
+          ...style,
+          display: "grid",
+          gridTemplateColumns: `repeat(${columns.length}, minmax(150px, 1fr))`
+        }}
+        className="preview-row"
+      >
+        {columns.map((column) => (
+          <div
+            className="preview-cell"
+            key={column}
+          >
+            {row[column]}
+          </div>
+        ))}
+      </div>
+    );
+  };
+
   return (
     <div className="upload-section">
       <h2>Upload Dataset</h2>
 
-      <p>Select a CSV file to process and preview.</p>
+      <p>
+        Select a CSV file to process and preview.
+      </p>
 
       <input
         type="file"
@@ -79,7 +109,9 @@ function FileUpload() {
             onClick={handleUpload}
             disabled={loading}
           >
-            {loading ? "Processing..." : "Upload Dataset"}
+            {loading
+              ? "Processing..."
+              : "Upload Dataset"}
           </button>
         </div>
       )}
@@ -99,7 +131,8 @@ function FileUpload() {
           </p>
 
           <p>
-            Preview Rows: <strong>{preview.length}</strong>
+            Preview Rows:{" "}
+            <strong>{preview.length}</strong>
           </p>
         </div>
       )}
@@ -112,31 +145,32 @@ function FileUpload() {
             Showing the first {preview.length} rows.
           </p>
 
-          <div className="table-container">
-            <table>
-              <thead>
-                <tr>
-                  {Object.keys(preview[0]).map((column) => (
-                    <th key={column}>{column}</th>
-                  ))}
-                </tr>
-              </thead>
-
-              <tbody>
-                {preview.map((row, index) => (
-                  <tr key={index}>
-                    {Object.values(row).map(
-                      (value, columnIndex) => (
-                        <td key={columnIndex}>
-                          {value}
-                        </td>
-                      )
-                    )}
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+          <div
+            className="preview-table"
+            style={{
+              gridTemplateColumns: `repeat(${columns.length}, minmax(150px, 1fr))`
+            }}
+          >
+            {columns.map((column) => (
+              <div
+                className="preview-header"
+                key={column}
+              >
+                {column}
+              </div>
+            ))}
           </div>
+
+          <List
+            rowCount={preview.length}
+            rowHeight={45}
+            style={{
+              height: 400,
+              width: "100%"
+            }}
+            rowComponent={Row}
+            rowProps={{}}
+          />
         </div>
       )}
     </div>
