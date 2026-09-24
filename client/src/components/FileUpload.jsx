@@ -12,6 +12,13 @@ function FileUpload() {
     const selectedFile = event.target.files[0];
 
     if (selectedFile) {
+      const fileName = selectedFile.name.toLowerCase();
+      
+      if (!fileName.endsWith(".csv")) {
+        setFile(null);
+        setMessage("Please select a CSV file.");
+        return;
+      }
       setFile(selectedFile);
       setMessage("");
       setPreview([]);
