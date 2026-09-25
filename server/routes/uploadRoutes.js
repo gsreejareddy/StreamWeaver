@@ -1,6 +1,7 @@
 const express = require("express");
 const Busboy = require("busboy");
 const csv = require("csv-parser");
+const { Transform } = require("stream");
 
 const router = express.Router();
 
@@ -11,11 +12,29 @@ router.post("/upload", (req, res) => {
   let rowCount = 0;
   const previewRows = [];
 
+  // Transform stream for processing CSV rows
+  const transformStream = new Transform({
+    objectMode: true,
+
+    transform(row, encoding, callback) {
+      const transformedRow = {};
+
+      for (const key of Object.keys(row)) {
+        transformedRow[key] = row[key];
+      }
+
+      this.push(transformedRow);
+
+      callback();
+    }
+  });
+
   busboy.on("file", (fieldname, file, info) => {
     fileName = info.filename;
 
     file
       .pipe(csv())
+      .pipe(transformStream)
       .on("data", (row) => {
         rowCount++;
 
@@ -29,7 +48,7 @@ router.post("/upload", (req, res) => {
         console.log(`Preview rows: ${previewRows.length}`);
       })
       .on("error", (error) => {
-        console.error("CSV parsing error:", error);
+        console.error("CSV processing error:", error);
       });
   });
 
