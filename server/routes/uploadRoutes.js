@@ -15,16 +15,20 @@ router.post("/upload", (req, res) => {
   // Transform stream for processing CSV rows
   const transformStream = new Transform({
     objectMode: true,
-
+    
     transform(row, encoding, callback) {
       const transformedRow = {};
-
+      
       for (const key of Object.keys(row)) {
-        transformedRow[key] = row[key];
+        const value = row[key];
+        
+        if (typeof value === "string") {
+          transformedRow[key] = value.toUpperCase();
+        } else {
+          transformedRow[key] = value;
+        }
       }
-
       this.push(transformedRow);
-
       callback();
     }
   });
