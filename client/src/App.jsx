@@ -1,10 +1,14 @@
 import { useState } from "react";
 import Login from "./components/Login";
-import FileUpload from "./components/FileUpload";
 import "./App.css";
 
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [file, setFile] = useState(null);
+  const [message, setMessage] = useState("");
+  const [preview, setPreview] = useState([]);
+  const [rowCount, setRowCount] = useState(0);
+  const [loading, setLoading] = useState(false);
 
   const handleLogin = () => {
     setIsLoggedIn(true);
@@ -14,14 +18,71 @@ function App() {
     setIsLoggedIn(false);
   };
 
+  const handleFileChange = (event) => {
+    const selectedFile = event.target.files[0];
+
+    if (!selectedFile) {
+      return;
+    }
+
+    const fileName = selectedFile.name.toLowerCase();
+
+    if (!fileName.endsWith(".csv")) {
+      setFile(null);
+      setMessage("Please select a CSV file.");
+      return;
+    }
+
+    setFile(selectedFile);
+    setMessage("");
+    setPreview([]);
+    setRowCount(0);
+  };
+
+  const handleUpload = async () => {
+    if (!file) {
+      setMessage("Please select a CSV file first.");
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append("file", file);
+
+    try {
+      setLoading(true);
+      setMessage("Uploading and processing...");
+
+      const response = await fetch(
+        "http://localhost:5000/api/upload",
+        {
+          method: "POST",
+          body: formData
+        }
+      );
+
+      const data = await response.json();
+
+      setMessage(data.message);
+      setPreview(data.preview || []);
+      setRowCount(data.rowCount || 0);
+    } catch (error) {
+      console.error(error);
+      setMessage("Upload failed.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
   if (!isLoggedIn) {
     return <Login onLogin={handleLogin} />;
   }
 
   return (
     <div className="app-layout">
+
       {/* Sidebar */}
       <aside className="sidebar">
+
         <div className="brand">
           <div className="brand-icon">S</div>
 
@@ -32,6 +93,7 @@ function App() {
         </div>
 
         <nav className="sidebar-nav">
+
           <p className="nav-title">MAIN MENU</p>
 
           <button className="nav-item active">
@@ -65,11 +127,14 @@ function App() {
             <span>⚙</span>
             Settings
           </button>
+
         </nav>
 
         <div className="sidebar-bottom">
+
           <div className="help-card">
             <strong>Need Help?</strong>
+
             <p>
               Check your pipeline activity and dataset status.
             </p>
@@ -81,27 +146,37 @@ function App() {
           >
             ↪ Logout
           </button>
+
         </div>
+
       </aside>
 
-      {/* Main Dashboard */}
+      {/* Main Content */}
       <main className="dashboard-content">
 
         {/* Top Bar */}
         <header className="topbar">
-          <div>
-            <p className="welcome-label">Dashboard</p>
 
-            <h2>Welcome Back, Sreeja 👋</h2>
+          <div>
+
+            <p className="welcome-label">
+              Dashboard
+            </p>
+
+            <h2>
+              Welcome Back, Sreeja 👋
+            </h2>
 
             <p className="welcome-text">
               Manage your datasets and ETL pipelines from one place.
             </p>
+
           </div>
 
           <div className="topbar-actions">
 
             <div className="profile">
+
               <div className="profile-avatar">
                 S
               </div>
@@ -110,19 +185,18 @@ function App() {
                 <strong>Sreeja</strong>
                 <span>Data User</span>
               </div>
+
             </div>
 
-            <button className="primary-button">
-              + Upload New Dataset
-            </button>
-
           </div>
+
         </header>
 
         {/* Metrics */}
         <section className="metrics-grid">
 
           <div className="metric-card">
+
             <div className="metric-icon blue">
               ▣
             </div>
@@ -134,9 +208,11 @@ function App() {
                 +12% this month
               </span>
             </div>
+
           </div>
 
           <div className="metric-card">
+
             <div className="metric-icon purple">
               ≋
             </div>
@@ -148,9 +224,11 @@ function App() {
                 +18% this month
               </span>
             </div>
+
           </div>
 
           <div className="metric-card">
+
             <div className="metric-icon orange">
               ⇄
             </div>
@@ -162,9 +240,11 @@ function App() {
                 2 running now
               </span>
             </div>
+
           </div>
 
           <div className="metric-card">
+
             <div className="metric-icon green">
               ✓
             </div>
@@ -176,6 +256,7 @@ function App() {
                 +3.2% this month
               </span>
             </div>
+
           </div>
 
         </section>
@@ -183,17 +264,21 @@ function App() {
         {/* Workspace */}
         <section className="workspace-grid">
 
-          {/* Upload Workspace */}
+          {/* Upload Area */}
           <div className="main-workspace">
 
             <div className="section-heading">
 
               <div>
-                <h3>Upload Dataset</h3>
+
+                <h3>
+                  Upload Dataset
+                </h3>
 
                 <p>
                   Start a new data processing workflow.
                 </p>
+
               </div>
 
               <span className="status-badge">
@@ -202,22 +287,36 @@ function App() {
 
             </div>
 
+            {/* Single Upload Box */}
             <div className="upload-dashboard-area">
 
               <div className="cloud-icon">
                 ☁
               </div>
 
-              <h3>Upload your dataset</h3>
+              <h3>
+                Upload your dataset
+              </h3>
 
               <p>
-                Drag and drop your CSV file here, or select
-                a file from your computer.
+                Drag and drop your CSV file here,
+                or select a file from your computer.
               </p>
 
-              <button className="select-file-button">
+              <input
+                type="file"
+                accept=".csv"
+                id="dataset-file"
+                onChange={handleFileChange}
+                hidden
+              />
+
+              <label
+                htmlFor="dataset-file"
+                className="select-file-button"
+              >
                 Select File
-              </button>
+              </label>
 
               <span className="upload-hint">
                 Supported format: CSV • Maximum size: 5GB
@@ -225,10 +324,126 @@ function App() {
 
             </div>
 
-            {/* Existing working upload component */}
-            <div className="existing-upload">
-              <FileUpload />
-            </div>
+            {/* Selected File */}
+            {file && (
+
+              <div className="selected-file-card">
+
+                <div>
+
+                  <strong>
+                    {file.name}
+                  </strong>
+
+                  <span>
+                    {(file.size / (1024 * 1024)).toFixed(2)} MB
+                  </span>
+
+                </div>
+
+                <button
+                  className="upload-action-button"
+                  onClick={handleUpload}
+                  disabled={loading}
+                >
+                  {loading
+                    ? "Processing..."
+                    : "Upload Dataset"}
+                </button>
+
+              </div>
+
+            )}
+
+            {/* Message */}
+            {message && (
+
+              <div className="upload-result">
+
+                {message}
+
+              </div>
+
+            )}
+
+            {/* Dataset Information */}
+            {rowCount > 0 && (
+
+              <div className="dataset-info">
+
+                <h3>
+                  Dataset Information
+                </h3>
+
+                <p>
+                  Total Rows:
+                  <strong> {rowCount}</strong>
+                </p>
+
+                <p>
+                  Preview Rows:
+                  <strong> {preview.length}</strong>
+                </p>
+
+              </div>
+
+            )}
+
+            {/* Preview */}
+            {preview.length > 0 && (
+
+              <div className="preview-section">
+
+                <h3>
+                  Dataset Preview
+                </h3>
+
+                <p>
+                  Showing the first {preview.length} rows.
+                </p>
+
+                <div className="preview-table">
+
+                  {Object.keys(preview[0]).map(
+                    (column) => (
+                      <div
+                        className="preview-header"
+                        key={column}
+                      >
+                        {column}
+                      </div>
+                    )
+                  )}
+
+                  {preview.map((row, index) => (
+
+                    <div
+                      className="preview-row"
+                      key={index}
+                    >
+
+                      {Object.keys(preview[0]).map(
+                        (column) => (
+
+                          <div
+                            className="preview-cell"
+                            key={column}
+                          >
+                            {row[column]}
+                          </div>
+
+                        )
+                      )}
+
+                    </div>
+
+                  ))}
+
+                </div>
+
+              </div>
+
+            )}
 
           </div>
 
@@ -238,11 +453,15 @@ function App() {
             <div className="panel-heading">
 
               <div>
-                <h3>Pipeline Workspace</h3>
+
+                <h3>
+                  Pipeline Workspace
+                </h3>
 
                 <p>
                   Recent pipeline activity
                 </p>
+
               </div>
 
               <span className="online-dot">
@@ -258,8 +477,13 @@ function App() {
               </div>
 
               <div>
-                <strong>CSV Processing</strong>
-                <span>Running</span>
+                <strong>
+                  CSV Processing
+                </strong>
+
+                <span>
+                  Ready
+                </span>
               </div>
 
               <div className="progress-small">
@@ -270,7 +494,9 @@ function App() {
 
             <div className="activity-list">
 
-              <h4>Recent Activity</h4>
+              <h4>
+                Recent Activity
+              </h4>
 
               <div className="activity-item">
 
@@ -279,13 +505,19 @@ function App() {
                 </div>
 
                 <div>
-                  <strong>Dataset processed</strong>
+
+                  <strong>
+                    Dataset processed
+                  </strong>
+
                   <span>
                     online_food_delivery.csv
                   </span>
+
                   <small>
                     10 minutes ago
                   </small>
+
                 </div>
 
               </div>
@@ -297,13 +529,19 @@ function App() {
                 </div>
 
                 <div>
-                  <strong>New dataset uploaded</strong>
+
+                  <strong>
+                    New dataset uploaded
+                  </strong>
+
                   <span>
                     customer_data.csv
                   </span>
+
                   <small>
                     32 minutes ago
                   </small>
+
                 </div>
 
               </div>
@@ -315,13 +553,19 @@ function App() {
                 </div>
 
                 <div>
-                  <strong>Pipeline completed</strong>
+
+                  <strong>
+                    Pipeline completed
+                  </strong>
+
                   <span>
                     Customer ETL Pipeline
                   </span>
+
                   <small>
                     1 hour ago
                   </small>
+
                 </div>
 
               </div>
@@ -337,6 +581,7 @@ function App() {
         </section>
 
       </main>
+
     </div>
   );
 }
