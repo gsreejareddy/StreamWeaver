@@ -9,14 +9,17 @@ body {
   color: #172033;
 }
 
-button {
-  cursor: pointer;
+button,
+input {
   font-family: inherit;
 }
 
-/* =========================
-   LOGIN
-========================= */
+button {
+  cursor: pointer;
+}
+
+
+/* ================= LOGIN ================= */
 
 .login-page {
   min-height: 100vh;
@@ -79,9 +82,8 @@ button {
   color: #dc2626 !important;
 }
 
-/* =========================
-   MAIN LAYOUT
-========================= */
+
+/* ================= MAIN LAYOUT ================= */
 
 .app-layout {
   min-height: 100vh;
@@ -89,9 +91,8 @@ button {
   background: #f5f7fb;
 }
 
-/* =========================
-   SIDEBAR
-========================= */
+
+/* ================= SIDEBAR ================= */
 
 .sidebar {
   width: 250px;
@@ -219,9 +220,8 @@ button {
   color: white;
 }
 
-/* =========================
-   MAIN CONTENT
-========================= */
+
+/* ================= MAIN CONTENT ================= */
 
 .dashboard-content {
   width: calc(100% - 250px);
@@ -229,9 +229,8 @@ button {
   padding: 30px 36px;
 }
 
-/* =========================
-   TOP BAR
-========================= */
+
+/* ================= TOP BAR ================= */
 
 .topbar {
   display: flex;
@@ -257,12 +256,6 @@ button {
   margin: 7px 0 0;
   color: #6b7280;
   font-size: 14px;
-}
-
-.topbar-actions {
-  display: flex;
-  align-items: center;
-  gap: 20px;
 }
 
 .profile {
@@ -295,24 +288,8 @@ button {
   margin-top: 2px;
 }
 
-.primary-button {
-  border: none;
-  padding: 12px 17px;
-  border-radius: 8px;
-  background: #2563eb;
-  color: white;
-  font-size: 13px;
-  font-weight: 600;
-  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.2);
-}
 
-.primary-button:hover {
-  background: #1d4ed8;
-}
-
-/* =========================
-   METRICS
-========================= */
+/* ================= METRICS ================= */
 
 .metrics-grid {
   display: grid;
@@ -385,9 +362,8 @@ button {
   font-size: 10px;
 }
 
-/* =========================
-   WORKSPACE
-========================= */
+
+/* ================= WORKSPACE ================= */
 
 .workspace-grid {
   display: grid;
@@ -437,9 +413,8 @@ button {
   font-weight: 600;
 }
 
-/* =========================
-   UPLOAD AREA
-========================= */
+
+/* ================= UPLOAD AREA ================= */
 
 .upload-dashboard-area {
   min-height: 280px;
@@ -452,6 +427,12 @@ button {
   justify-content: center;
   text-align: center;
   padding: 30px;
+  transition: 0.2s ease;
+}
+
+.upload-dashboard-area:hover {
+  border-color: #2563eb;
+  background: #f8fbff;
 }
 
 .cloud-icon {
@@ -480,6 +461,7 @@ button {
 }
 
 .select-file-button {
+  display: inline-block;
   border: none;
   border-radius: 8px;
   padding: 11px 22px;
@@ -487,10 +469,12 @@ button {
   color: white;
   font-weight: 600;
   margin-top: 8px;
+  transition: 0.2s ease;
 }
 
 .select-file-button:hover {
   background: #1d4ed8;
+  transform: translateY(-1px);
 }
 
 .upload-hint {
@@ -499,22 +483,157 @@ button {
   font-size: 10px;
 }
 
-/* Existing functionality */
 
-.existing-upload {
-  margin-top: 20px;
+/* ================= SELECTED FILE ================= */
+
+.selected-file-card {
+  margin-top: 18px;
+  padding: 16px;
+  border: 1px solid #dbe2ea;
+  border-radius: 10px;
+  background: white;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 15px;
 }
 
-.existing-upload .upload-section {
-  margin-top: 0;
-  padding: 0;
-  box-shadow: none;
+.selected-file-card > div {
+  min-width: 0;
+}
+
+.selected-file-card strong {
+  display: block;
+  color: #172033;
+  font-size: 13px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.selected-file-card span {
+  display: block;
+  margin-top: 4px;
+  color: #6b7280;
+  font-size: 11px;
+}
+
+.upload-action-button {
+  flex-shrink: 0;
+  padding: 10px 16px;
   border: none;
+  border-radius: 8px;
+  background: #2563eb;
+  color: white;
+  font-size: 12px;
+  font-weight: 600;
 }
 
-/* =========================
-   PIPELINE PANEL
-========================= */
+.upload-action-button:hover {
+  background: #1d4ed8;
+}
+
+.upload-action-button:disabled {
+  background: #93c5fd;
+  cursor: not-allowed;
+}
+
+
+/* ================= RESULT ================= */
+
+.upload-result {
+  margin-top: 15px;
+  padding: 12px 15px;
+  border-radius: 8px;
+  background: #ecfdf5;
+  color: #15803d;
+  border: 1px solid #bbf7d0;
+  font-size: 12px;
+}
+
+.error-message {
+  background: #fef2f2;
+  color: #dc2626;
+  border-color: #fecaca;
+}
+
+
+/* ================= DATASET INFORMATION ================= */
+
+.dataset-info {
+  margin-top: 20px;
+  padding: 18px;
+  background: #eff6ff;
+  border-radius: 9px;
+  border: 1px solid #dbeafe;
+}
+
+.dataset-info h3 {
+  margin: 0 0 12px;
+  font-size: 15px;
+}
+
+.dataset-info p {
+  margin: 7px 0;
+  color: #475569;
+  font-size: 12px;
+}
+
+
+/* ================= DATASET PREVIEW ================= */
+
+.preview-section {
+  margin-top: 25px;
+}
+
+.preview-section h3 {
+  margin-bottom: 5px;
+}
+
+.preview-section p {
+  color: #6b7280;
+  font-size: 12px;
+}
+
+.preview-table {
+  margin-top: 15px;
+  width: 100%;
+  overflow-x: auto;
+  border: 1px solid #d1d5db;
+  border-radius: 9px;
+}
+
+.preview-row {
+  display: flex;
+  min-width: max-content;
+  background: white;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.preview-header {
+  width: 150px;
+  min-width: 150px;
+  padding: 12px;
+  background: #f3f4f6;
+  font-weight: bold;
+  border-right: 1px solid #d1d5db;
+  border-bottom: 1px solid #d1d5db;
+  white-space: nowrap;
+}
+
+.preview-cell {
+  width: 150px;
+  min-width: 150px;
+  padding: 12px;
+  border-right: 1px solid #e5e7eb;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-size: 12px;
+}
+
+
+/* ================= PIPELINE PANEL ================= */
 
 .pipeline-panel {
   padding: 22px;
@@ -539,7 +658,7 @@ button {
   display: grid;
   grid-template-columns: 40px 1fr;
   gap: 10px;
-  margin-bottom: 25px;
+  margin-bottom: 15px;
 }
 
 .pipeline-status-icon {
@@ -566,11 +685,11 @@ button {
 }
 
 .progress-small {
-  grid-column: 1 / 3;
   height: 5px;
   border-radius: 10px;
   background: #e5e7eb;
   overflow: hidden;
+  margin-bottom: 25px;
 }
 
 .progress-small-fill {
@@ -652,57 +771,11 @@ button {
   background: #f8fafc;
 }
 
-/* =========================
-   DATASET PREVIEW
-========================= */
 
-.dataset-info {
-  margin-top: 20px;
-  padding: 18px;
-  background: #eff6ff;
-  border-radius: 9px;
-}
-
-.preview-section {
-  margin-top: 25px;
-}
-
-.preview-table {
-  display: grid;
-  background: #f3f4f6;
-  border: 1px solid #d1d5db;
-  overflow-x: auto;
-}
-
-.preview-header {
-  padding: 12px;
-  font-weight: bold;
-  border-right: 1px solid #d1d5db;
-  border-bottom: 1px solid #d1d5db;
-  white-space: nowrap;
-}
-
-.preview-row {
-  display: grid;
-  grid-template-columns: inherit;
-  min-width: 100%;
-  border-bottom: 1px solid #e5e7eb;
-  background: white;
-}
-
-.preview-cell {
-  padding: 12px;
-  border-right: 1px solid #e5e7eb;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-/* =========================
-   RESPONSIVE
-========================= */
+/* ================= RESPONSIVE ================= */
 
 @media (max-width: 1100px) {
+
   .metrics-grid {
     grid-template-columns: repeat(2, 1fr);
   }
@@ -714,9 +787,12 @@ button {
   .pipeline-panel {
     width: 100%;
   }
+
 }
 
+
 @media (max-width: 800px) {
+
   .sidebar {
     width: 210px;
   }
@@ -732,13 +808,20 @@ button {
     align-items: flex-start;
   }
 
-  .topbar-actions {
-    width: 100%;
-    justify-content: space-between;
+  .selected-file-card {
+    align-items: flex-start;
+    flex-direction: column;
   }
+
+  .upload-action-button {
+    width: 100%;
+  }
+
 }
 
+
 @media (max-width: 600px) {
+
   .sidebar {
     position: relative;
     width: 100%;
@@ -759,16 +842,20 @@ button {
     grid-template-columns: 1fr;
   }
 
-  .topbar-actions {
-    flex-direction: column;
+  .topbar {
     align-items: flex-start;
-  }
-
-  .primary-button {
-    width: 100%;
   }
 
   .workspace-grid {
     grid-template-columns: 1fr;
   }
+
+  .main-workspace {
+    padding: 16px;
+  }
+
+  .upload-dashboard-area {
+    padding: 20px;
+  }
+
 }
