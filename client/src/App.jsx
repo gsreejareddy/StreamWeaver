@@ -1,5 +1,6 @@
 import { useState } from "react";
 import Login from "./components/Login";
+import ColumnMapping from "./components/ColumnMapping";
 import "./App.css";
 
 function App() {
@@ -495,6 +496,10 @@ function App() {
             {/* DATASET PREVIEW */}
 
             {preview.length > 0 && (
+              <ColumnMapping
+                columns={Object.keys(preview[0])}
+              />
+            )}
 
               <div className="preview-section">
 
@@ -557,7 +562,6 @@ function App() {
 
               </div>
 
-            )}
 
           </section>
 
