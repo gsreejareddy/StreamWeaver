@@ -493,37 +493,64 @@ function App() {
             )}
 
 
-            {/* DATASET PREVIEW */}
+            {/* ================= DATASET PREVIEW ================= */}
 
-            {preview.length > 0 && (
-              <ColumnMapping
-                columns={Object.keys(preview[0])}
-              />
-            )}
+            {preview?.length > 0 && preview[0] && (
 
-              <div className="preview-section">
+              <>
 
-                <h3>
-                  Dataset Preview
-                </h3>
+                <div className="preview-section">
 
-                <p>
-                  Showing the first {preview.length} rows.
-                </p>
+                  <h3>
+                    Dataset Preview
+                  </h3>
+
+                  <p>
+                    Showing the first {preview.length} rows.
+                  </p>
 
 
-                <div className="preview-table">
+                  <div className="preview-table">
 
-                  <div className="preview-row">
+                    <div className="preview-row">
 
-                    {Object.keys(preview[0]).map(
-                      (column) => (
+                      {Object.keys(preview[0]).map(
+                        (column) => (
+
+                          <div
+                            className="preview-header"
+                            key={column}
+                          >
+                            {column}
+                          </div>
+
+                        )
+                      )}
+
+                    </div>
+
+
+                    {preview.map(
+                      (row, index) => (
 
                         <div
-                          className="preview-header"
-                          key={column}
+                          className="preview-row"
+                          key={index}
                         >
-                          {column}
+
+                          {Object.keys(preview[0]).map(
+                            (column) => (
+
+                              <div
+                                className="preview-cell"
+                                key={column}
+                              >
+                                {row[column]}
+                              </div>
+
+                            )
+                          )}
+
                         </div>
 
                       )
@@ -531,37 +558,18 @@ function App() {
 
                   </div>
 
-
-                  {preview.map(
-                    (row, index) => (
-
-                      <div
-                        className="preview-row"
-                        key={index}
-                      >
-
-                        {Object.keys(preview[0]).map(
-                          (column) => (
-
-                            <div
-                              className="preview-cell"
-                              key={column}
-                            >
-                              {row[column]}
-                            </div>
-
-                          )
-                        )}
-
-                      </div>
-
-                    )
-                  )}
-
                 </div>
 
-              </div>
 
+                {/* COLUMN MAPPING */}
+
+                <ColumnMapping
+                  columns={Object.keys(preview[0])}
+                />
+
+              </>
+
+            )}
 
           </section>
 
